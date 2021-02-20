@@ -17,6 +17,8 @@ namespace Rentoolo
 
         public string[] AllCities = RusCities.AllRusCities;
 
+        public StrSellFilter PreviousFilter = new StrSellFilter();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -33,9 +35,7 @@ namespace Rentoolo
 
                 string city = Request.QueryString["city"];
 
-                string sortBy = Request.QueryString["sortBy"];
-
-
+                string sortBy = Request.QueryString["sort"];
 
                 SellFilter filter = new SellFilter
                 {
@@ -57,7 +57,7 @@ namespace Rentoolo
                     }
                 }
 
-                if(decimal.TryParse(Request.QueryString["startPrice"],out startPrice2)||decimal.TryParse(Request.QueryString["endPrice"],out endPrice2))
+                if (decimal.TryParse(Request.QueryString["startPrice"], out startPrice2) || decimal.TryParse(Request.QueryString["endPrice"], out endPrice2))
                 {
                     decimal.TryParse(Request.QueryString["endPrice"], out endPrice2);
                     if (startPrice2 != null)
@@ -69,17 +69,17 @@ namespace Rentoolo
                     {
                         endPrice = endPrice2;
                     }
-
                 }
-
 
                 // test
                 string userIP = Request.RequestContext.HttpContext.Request.UserHostAddress;
 
 
+                string searchStr = (Request.QueryString["s"] == "") || (Request.QueryString["s"] == null) ? null : Request.QueryString["s"];
+
                 SellFilter sellFilter = new SellFilter()
                 {
-                    Search = Request.QueryString["s"],
+                    Search = searchStr,
                     StartDate = startDate2,
                     EndDate = endDate2,
                     City = city,
@@ -91,8 +91,11 @@ namespace Rentoolo
 
                 ListAdverts = AdvertsDataHelper.GetAdvertsForMainPage(sellFilter);
 
-
                 AdvertsCount = AdvertsDataHelper.GetAdvertsActiveCount(filter).ToString("N0");
+
+
+                PreviousFilter.SetFilterValues(sellFilter);
+
 
 
                 //Random rnd = new Random();
@@ -106,7 +109,6 @@ namespace Rentoolo
                 //UsersCountOnline = DataHelper.GetSettingByName("UsersCountOnline").Value;
 
                 //UsersCountOnline = (Convert.ToInt32(UsersCountOnline) + RandomInt).ToString();
-
             }
         }
 
@@ -142,14 +144,33 @@ namespace Rentoolo
             Response.Redirect("/");
         }
 
+        string tryAddQuery(string name, string val, bool isFirst = false)
+        {
+            string and = "&";
+
+            if (isFirst)
+            {
+                and = "";
+            }
+
+            string query = and;
+
+            if (val != "" && val != null)
+            {
+                return query + name + "=" + val;
+            }
+
+            return "";
+        }
+
         protected void ButtonSearch_Click(object sender, EventArgs e)
         {
-            string search = String.Format("{0}", Request.Form["InputSearch"]);
+            string search = Request.Form["InputSearch"];
 
             // creating query string(queryStr) for redirect to this page with search parameters
 
-            string startDate = Request.Form["StartDate"];
-            string endDate = Request.Form["EndDate"];
+            //string startDate = Request.Form["StartDate"];
+            //string endDate = Request.Form["EndDate"];
 
             string onlyInName = Request.Form["onlyInName"];
 
@@ -160,17 +181,23 @@ namespace Rentoolo
 
             string sortBy = Request.Form["sortBy"];
 
-            string queryStr = "?"+ "s=" + search;
+            string queryStr = "?" + "s=" + search;
 
-            queryStr += "&startDate=" + startDate + "&endDate=" + endDate;
-            queryStr += "&onlyInName=" + onlyInName;
-            queryStr += "&startPrice=" + startPrice + "&endPrice=" + endPrice;
-            queryStr += "&city=" + city;
-            queryStr += "&sortBy=" + sortBy;
+            //queryStr += "&startDate=" + startDate + "&endDate=" + endDate;
+            //queryStr += "&onlyInName=" + onlyInName;
+            //queryStr += "&startPrice=" + startPrice + "&endPrice=" + endPrice;
+            //queryStr += "&city=" + city;
+            //queryStr += "&sort=" + sortBy;
+
+            queryStr += tryAddQuery("onlyInName", onlyInName, true);
+            queryStr += tryAddQuery("startPrice", startPrice) + tryAddQuery("endPrice", endPrice);
+            queryStr += tryAddQuery("city", city);
+            queryStr += tryAddQuery("sort", sortBy);
+
+
 
 
             Response.Redirect("/Default.aspx" + queryStr);
-
         }
     }
 }

@@ -135,6 +135,15 @@
           <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ChatId" Type="bigint" Nullable="false" />
         </EntityType>
+        <EntityType Name="ChatInviteTokens">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChatId" Type="bigint" Nullable="false" />
+          <Property Name="Token" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Status" Type="smallint" Nullable="false" />
+        </EntityType>
         <EntityType Name="ChatMessages">
           <Key>
             <PropertyRef Name="Id" />
@@ -153,6 +162,7 @@
           <Property Name="OwnerId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ChatName" Type="nvarchar" MaxLength="50" />
           <Property Name="ChatType" Type="smallint" Nullable="false" />
+          <Property Name="AnotherOwnerId" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="ChatUsers">
           <Key>
@@ -182,12 +192,57 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Message" Type="nvarchar(max)" />
-          <Property Name="СomplaintType" Type="int" Nullable="false" />
+          <Property Name="ComplaintType" Type="int" Nullable="false" />
           <Property Name="ObjectId" Type="int" Nullable="false" />
           <Property Name="ObjectType" Type="int" Nullable="false" />
           <Property Name="UserSender" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserRecipier" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Data" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="CraftsMan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Category" Type="int" Nullable="false" />
+          <Property Name="Craft" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="4000" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="150" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="Position" Type="geography" />
+          <Property Name="ImgUrls" Type="nvarchar(max)" />
+          <Property Name="YouTubeUrl" Type="nvarchar(max)" />
+          <Property Name="Subcategory" Type="int" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" />
+          <Property Name="Region" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CraftsManOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Category" Type="int" Nullable="false" />
+          <Property Name="NameTask" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="4000" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="150" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="Position" Type="geography" />
+          <Property Name="ImgUrls" Type="nvarchar(max)" />
+          <Property Name="YouTubeUrl" Type="nvarchar(max)" />
+          <Property Name="Subcategory" Type="int" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" />
+          <Property Name="Region" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Currencies">
           <Key>
@@ -263,6 +318,27 @@
           <Property Name="CommentId" Type="int" Nullable="false" />
           <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="DpdCities">
+          <Key>
+            <PropertyRef Name="cityId" />
+          </Key>
+          <Property Name="cityId" Type="bigint" Nullable="false" />
+          <Property Name="cityIdSpecified" Type="bit" Nullable="false" />
+          <Property Name="countryCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="countryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="regionCode" Type="int" Nullable="false" />
+          <Property Name="regionCodeSpecified" Type="bit" Nullable="false" />
+          <Property Name="regionName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="cityCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="cityName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="abbreviation" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="indexMin" Type="nvarchar" MaxLength="50" />
+          <Property Name="indexMax" Type="nvarchar" MaxLength="50" />
+          <Property Name="Population" Type="bigint" />
+          <Property Name="Settled" Type="nchar" MaxLength="20" />
+          <Property Name="lat" Type="float" />
+          <Property Name="lng" Type="float" />
+        </EntityType>
         <EntityType Name="Exceptions">
           <Key>
             <PropertyRef Name="Id" />
@@ -271,6 +347,26 @@
           <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
           <Property Name="WhenDate" Type="datetime" Nullable="false" />
           <Property Name="UserId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="ExchangeItemRequests">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExchangeItemId" Type="bigint" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="WantedExchangeItemId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExchangeProducts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdvertId" Type="bigint" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="WantedObject" Type="nvarchar" MaxLength="50" />
+          <Property Name="Header" Type="nvarchar" MaxLength="50" />
+          <Property Name="SelectedRequestId" Type="bigint" />
         </EntityType>
         <EntityType Name="Favorites">
           <Key>
@@ -379,6 +475,17 @@
           <Property Name="FailedPasswordAnswerAttemptWindowsStart" Type="datetime" Nullable="false" />
           <Property Name="Comment" Type="nvarchar" MaxLength="256" />
         </EntityType>
+        <EntityType Name="NewAezakmi">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Authorld" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="News">
           <Key>
             <PropertyRef Name="Id" />
@@ -390,7 +497,128 @@
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Active" Type="bit" />
         </EntityType>
+        <EntityType Name="News_towardsbackwards">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsAlexPigalyov">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" />
+        </EntityType>
+        <EntityType Name="NewsAntares">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="authorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="createDate" Type="datetime" Nullable="false" />
+          <Property Name="active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsAzizjan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsBatrebleSs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="NewsEducation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsEducationBlacklake">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsEoll73">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsGGdotNET">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Newsillfyar">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsIlya">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsMrshkVV">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -412,6 +640,24 @@
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Active" Type="bit" Nullable="false" />
         </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Rentoolo.dbo.NewsShCodder" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="NewsShCodder">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Text" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="AuthorId" />
+            <PropertyRef Name="CreateDate" />
+            <PropertyRef Name="Active" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="NewsVark">
           <Key>
             <PropertyRef Name="Id" />
@@ -422,6 +668,17 @@
           <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Active" Type="bit" />
+        </EntityType>
+        <EntityType Name="NewsVlad">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AuthorId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Operations">
           <Key>
@@ -462,6 +719,14 @@
           <Property Name="IdentificateStatus" Type="int" Nullable="false" />
           <Property Name="Commision" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="Rates">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="Recipes">
           <Key>
             <PropertyRef Name="Id" />
@@ -483,6 +748,37 @@
           <Property Name="ReferrerUserId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ReferralUserId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="WhenDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DateStart" Type="date" Nullable="false" />
+          <Property Name="DateEnd" Type="date" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="UserOwnerId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RentType" Type="int" Nullable="false" />
+          <Property Name="DayRentPrice" Type="int" Nullable="false" />
+          <Property Name="HourRentPrice" Type="int" />
+          <Property Name="MinuteRentPrice" Type="int" />
+          <Property Name="ImgUrls" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Rentoolo.dbo.RentedTime" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="RentedTime">
+          <Key>
+            <PropertyRef Name="RentId" />
+            <PropertyRef Name="TimeStart" />
+            <PropertyRef Name="TimeEnd" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="RentId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="TimeStart" Type="datetime" Nullable="false" />
+          <Property Name="TimeEnd" Type="datetime" Nullable="false" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -629,6 +925,22 @@
           <Property Name="MembershipUserName" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="HasLocalPassword" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="UsersSearches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Search" Type="nvarchar" MaxLength="50" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="OnlyInName" Type="bit" />
+          <Property Name="StartPrice" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="EndPrice" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" />
+          <Property Name="SortBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="UserViews">
           <Key>
             <PropertyRef Name="Id" />
@@ -637,6 +949,16 @@
           <Property Name="ObjectId" Type="int" Nullable="false" />
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ViewedObjects">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ObjectId" Type="bigint" Nullable="false" />
+          <Property Name="ObjectType" Type="int" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Wallets">
@@ -982,6 +1304,9 @@
           <Parameter Name="uid" Type="nvarchar" Mode="In" />
           <Parameter Name="advertId" Type="bigint" Mode="In" />
         </Function>
+        <Function Name="spDPDCitiesTop10" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="text" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="spGetChats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userId" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -1002,6 +1327,12 @@
         <Function Name="spGetComplaintsBySender" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userId" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="spGetExchangeItemRequests" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="exchangeItemId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="spGetExchangeProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="query" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="spGetFavorites" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userId" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -1021,10 +1352,6 @@
         <Function Name="spGetWatchedByCookies" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="uid" Type="nvarchar" Mode="In" />
         </Function>
-        <Function Name="spUpdateQiwiAccountBalance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="number" Type="nvarchar" Mode="In" />
-          <Parameter Name="balance" Type="float" Mode="In" />
-        </Function>
         <EntityContainer Name="Хранилище RentooloModelContainer">
           <EntitySet Name="Adverts" EntityType="Self.Adverts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Applications" EntityType="Self.Applications" Schema="dbo" store:Type="Tables" />
@@ -1035,11 +1362,14 @@
           <EntitySet Name="CashIns" EntityType="Self.CashIns" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CashOuts" EntityType="Self.CashOuts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChatActiveUsers" EntityType="Self.ChatActiveUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChatInviteTokens" EntityType="Self.ChatInviteTokens" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChatMessages" EntityType="Self.ChatMessages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Chats" EntityType="Self.Chats" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChatUsers" EntityType="Self.ChatUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Complaints" EntityType="Self.Complaints" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CraftsMan" EntityType="Self.CraftsMan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CraftsManOrder" EntityType="Self.CraftsManOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Currencies" EntityType="Self.Currencies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DailyStatistics" EntityType="Self.DailyStatistics" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeletedAdverts" EntityType="Self.DeletedAdverts" Schema="dbo" store:Type="Tables" />
@@ -1047,7 +1377,10 @@
           <EntitySet Name="DialogMessages" EntityType="Self.DialogMessages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DialogsInfo" EntityType="Self.DialogsInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DisLikes" EntityType="Self.DisLikes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DpdCities" EntityType="Self.DpdCities" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Exceptions" EntityType="Self.Exceptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExchangeItemRequests" EntityType="Self.ExchangeItemRequests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExchangeProducts" EntityType="Self.ExchangeProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Favorites" EntityType="Self.Favorites" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FavoritesByCookies" EntityType="Self.FavoritesByCookies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemDislikes" EntityType="Self.ItemDislikes" Schema="dbo" store:Type="Tables" />
@@ -1057,15 +1390,30 @@
           <EntitySet Name="LoginStat" EntityType="Self.LoginStat" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginStatistics" EntityType="Self.LoginStatistics" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Memberships" EntityType="Self.Memberships" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewAezakmi" EntityType="Self.NewAezakmi" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="News" EntityType="Self.News" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="News_towardsbackwards" EntityType="Self.News_towardsbackwards" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewsAlexPigalyov" EntityType="Self.NewsAlexPigalyov" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewsAntares" EntityType="Self.NewsAntares" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewsAzizjan" EntityType="Self.NewsAzizjan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewsBatrebleSs" EntityType="Self.NewsBatrebleSs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NewsEducation" EntityType="Self.NewsEducation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewsEducationBlacklake" EntityType="Self.NewsEducationBlacklake" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewsEoll73" EntityType="Self.NewsEoll73" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewsGGdotNET" EntityType="Self.NewsGGdotNET" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Newsillfyar" EntityType="Self.Newsillfyar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewsIlya" EntityType="Self.NewsIlya" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewsMrshkVV" EntityType="Self.NewsMrshkVV" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NewsRaspel" EntityType="Self.NewsRaspel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NewsVark" EntityType="Self.NewsVark" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewsVlad" EntityType="Self.NewsVlad" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Operations" EntityType="Self.Operations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Phones" EntityType="Self.Phones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rates" EntityType="Self.Rates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Recipes" EntityType="Self.Recipes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Referrals" EntityType="Self.Referrals" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rent" EntityType="Self.Rent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Settings" EntityType="Self.Settings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TenderRequest" EntityType="Self.TenderRequest" Schema="dbo" store:Type="Tables" />
@@ -1078,7 +1426,9 @@
           <EntitySet Name="UsersInRoles" EntityType="Self.UsersInRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UsersOpenAuthAccounts" EntityType="Self.UsersOpenAuthAccounts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UsersOpenAuthData" EntityType="Self.UsersOpenAuthData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsersSearches" EntityType="Self.UsersSearches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserViews" EntityType="Self.UserViews" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ViewedObjects" EntityType="Self.ViewedObjects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Wallets" EntityType="Self.Wallets" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Watched" EntityType="Self.Watched" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WatchedByCookies" EntityType="Self.WatchedByCookies" Schema="dbo" store:Type="Tables" />
@@ -1090,6 +1440,24 @@
     [Categories].[OrderId] AS [OrderId], 
     [Categories].[ParentCategoryId] AS [ParentCategoryId]
     FROM [dbo].[Categories] AS [Categories]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="NewsShCodder" EntityType="Self.NewsShCodder" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [NewsShCodder].[Id] AS [Id], 
+    [NewsShCodder].[Text] AS [Text], 
+    [NewsShCodder].[Date] AS [Date], 
+    [NewsShCodder].[AuthorId] AS [AuthorId], 
+    [NewsShCodder].[CreateDate] AS [CreateDate], 
+    [NewsShCodder].[Active] AS [Active]
+    FROM [dbo].[NewsShCodder] AS [NewsShCodder]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="RentedTime" EntityType="Self.RentedTime" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [RentedTime].[RentId] AS [RentId], 
+    [RentedTime].[TimeStart] AS [TimeStart], 
+    [RentedTime].[TimeEnd] AS [TimeEnd], 
+    [RentedTime].[UserId] AS [UserId]
+    FROM [dbo].[RentedTime] AS [RentedTime]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_CashIns_Users" Association="Self.FK_CashIns_Users">
             <End Role="Users" EntitySet="Users" />
@@ -1323,6 +1691,15 @@
           <Property Name="UserId" Type="Guid" Nullable="false" />
           <Property Name="ChatId" Type="Int64" Nullable="false" />
         </EntityType>
+        <EntityType Name="ChatInviteTokens">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChatId" Type="Int64" Nullable="false" />
+          <Property Name="Token" Type="Guid" Nullable="false" />
+          <Property Name="Status" Type="Int16" Nullable="false" />
+        </EntityType>
         <EntityType Name="ChatMessages">
           <Key>
             <PropertyRef Name="Id" />
@@ -1341,6 +1718,7 @@
           <Property Name="OwnerId" Type="Guid" Nullable="false" />
           <Property Name="ChatName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ChatType" Type="Int16" Nullable="false" />
+          <Property Name="AnotherOwnerId" Type="Guid" />
         </EntityType>
         <EntityType Name="ChatUsers">
           <Key>
@@ -1370,12 +1748,57 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="СomplaintType" Type="Int32" Nullable="false" />
+          <Property Name="ComplaintType" Type="Int32" Nullable="false" />
           <Property Name="ObjectId" Type="Int32" Nullable="false" />
           <Property Name="ObjectType" Type="Int32" Nullable="false" />
           <Property Name="UserSender" Type="Guid" Nullable="false" />
           <Property Name="UserRecipier" Type="Guid" Nullable="false" />
           <Property Name="Data" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="Byte" />
+        </EntityType>
+        <EntityType Name="CraftsMan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category" Type="Int32" Nullable="false" />
+          <Property Name="Craft" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Position" Type="Geography" />
+          <Property Name="ImgUrls" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="YouTubeUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Subcategory" Type="Int32" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Region" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CraftsManOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category" Type="Int32" Nullable="false" />
+          <Property Name="NameTask" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Position" Type="Geography" />
+          <Property Name="ImgUrls" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="YouTubeUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Subcategory" Type="Int32" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Region" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Currencies">
           <Key>
@@ -1452,6 +1875,27 @@
           <Property Name="CommentId" Type="Int32" Nullable="false" />
           <Property Name="UserId" Type="Guid" Nullable="false" />
         </EntityType>
+        <EntityType Name="DpdCities">
+          <Key>
+            <PropertyRef Name="cityId" />
+          </Key>
+          <Property Name="cityId" Type="Int64" Nullable="false" />
+          <Property Name="cityIdSpecified" Type="Boolean" Nullable="false" />
+          <Property Name="countryCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="countryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="regionCode" Type="Int32" Nullable="false" />
+          <Property Name="regionCodeSpecified" Type="Boolean" Nullable="false" />
+          <Property Name="regionName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="cityCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="cityName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="abbreviation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="indexMin" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="indexMax" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Population" Type="Int64" />
+          <Property Name="Settled" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="lat" Type="Double" />
+          <Property Name="lng" Type="Double" />
+        </EntityType>
         <EntityType Name="Exceptions">
           <Key>
             <PropertyRef Name="Id" />
@@ -1460,6 +1904,26 @@
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="WhenDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UserId" Type="Guid" />
+        </EntityType>
+        <EntityType Name="ExchangeItemRequests">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExchangeItemId" Type="Int64" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WantedExchangeItemId" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExchangeProducts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdvertId" Type="Int64" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WantedObject" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Header" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SelectedRequestId" Type="Int64" />
         </EntityType>
         <EntityType Name="Favorites">
           <Key>
@@ -1570,6 +2034,17 @@
           <NavigationProperty Name="Applications" Relationship="Self.MembershipApplication" FromRole="Memberships" ToRole="Applications" />
           <NavigationProperty Name="Users" Relationship="Self.MembershipUser" FromRole="Memberships" ToRole="Users" />
         </EntityType>
+        <EntityType Name="NewAezakmi">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Authorld" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
         <EntityType Name="News">
           <Key>
             <PropertyRef Name="Id" />
@@ -1583,7 +2058,128 @@
           <NavigationProperty Name="Users" Relationship="Self.FK_News_Users" FromRole="News" ToRole="Users" />
           <NavigationProperty Name="Users1" Relationship="Self.FK_NewsVark_Users" FromRole="News" ToRole="Users" />
         </EntityType>
+        <EntityType Name="News_towardsbackwards">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsAlexPigalyov">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="NewsAntares">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="authorId" Type="Guid" Nullable="false" />
+          <Property Name="createDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsAzizjan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsBatrebleSs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
         <EntityType Name="NewsEducation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsEducationBlacklake">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsEoll73">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsGGdotNET">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Newsillfyar">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsIlya">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewsMrshkVV">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -1616,6 +2212,17 @@
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Active" Type="Boolean" />
           <NavigationProperty Name="Users" Relationship="Self.FK_NewsVark_Users1" FromRole="NewsVark" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="NewsVlad">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Operations">
           <Key>
@@ -1656,6 +2263,14 @@
           <Property Name="IdentificateStatus" Type="Int32" Nullable="false" />
           <Property Name="Commision" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="Rates">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
         <EntityType Name="Recipes">
           <Key>
             <PropertyRef Name="Id" />
@@ -1679,6 +2294,23 @@
           <Property Name="WhenDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Referrals_Users" FromRole="Referrals" ToRole="Users" />
           <NavigationProperty Name="Users1" Relationship="Self.FK_Referrals_Users1" FromRole="Referrals" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Rent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateStart" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DateEnd" Type="DateTime" Precision="0" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserOwnerId" Type="Guid" Nullable="false" />
+          <Property Name="RentType" Type="Int32" Nullable="false" />
+          <Property Name="DayRentPrice" Type="Int32" Nullable="false" />
+          <Property Name="HourRentPrice" Type="Int32" />
+          <Property Name="MinuteRentPrice" Type="Int32" />
+          <Property Name="ImgUrls" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -1834,6 +2466,22 @@
           <Property Name="HasLocalPassword" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="UsersOpenAuthAccounts" Relationship="Self.FK_dbo_UsersOpenAuthAccounts_dbo_UsersOpenAuthData_ApplicationName_MembershipUserName" FromRole="UsersOpenAuthData" ToRole="UsersOpenAuthAccounts" />
         </EntityType>
+        <EntityType Name="UsersSearches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Search" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="OnlyInName" Type="Boolean" />
+          <Property Name="StartPrice" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="EndPrice" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SortBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+        </EntityType>
         <EntityType Name="UserViews">
           <Key>
             <PropertyRef Name="Id" />
@@ -1842,6 +2490,16 @@
           <Property Name="ObjectId" Type="Int32" Nullable="false" />
           <Property Name="Type" Type="Int32" Nullable="false" />
           <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="ViewedObjects">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="ObjectId" Type="Int64" Nullable="false" />
+          <Property Name="ObjectType" Type="Int32" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="Wallets">
@@ -1887,6 +2545,34 @@
           <Property Name="Name_Ru_" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="OrderId" Type="Int32" Nullable="false" />
           <Property Name="ParentCategoryId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="NewsShCodder">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Text" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="AuthorId" />
+            <PropertyRef Name="CreateDate" />
+            <PropertyRef Name="Active" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AuthorId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RentedTime">
+          <Key>
+            <PropertyRef Name="RentId" />
+            <PropertyRef Name="TimeStart" />
+            <PropertyRef Name="TimeEnd" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="RentId" Type="Guid" Nullable="false" />
+          <Property Name="TimeStart" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TimeEnd" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
         </EntityType>
         <Association Name="MembershipApplication">
           <End Role="Applications" Type="Self.Applications" Multiplicity="1" />
@@ -2086,11 +2772,14 @@
           <EntitySet Name="CashIns" EntityType="Self.CashIns" />
           <EntitySet Name="CashOuts" EntityType="Self.CashOuts" />
           <EntitySet Name="ChatActiveUsers" EntityType="Self.ChatActiveUsers" />
+          <EntitySet Name="ChatInviteTokens" EntityType="Self.ChatInviteTokens" />
           <EntitySet Name="ChatMessages" EntityType="Self.ChatMessages" />
           <EntitySet Name="Chats" EntityType="Self.Chats" />
           <EntitySet Name="ChatUsers" EntityType="Self.ChatUsers" />
           <EntitySet Name="Comments" EntityType="Self.Comments" />
           <EntitySet Name="Complaints" EntityType="Self.Complaints" />
+          <EntitySet Name="CraftsMan" EntityType="Self.CraftsMan" />
+          <EntitySet Name="CraftsManOrder" EntityType="Self.CraftsManOrder" />
           <EntitySet Name="Currencies" EntityType="Self.Currencies" />
           <EntitySet Name="DailyStatistics" EntityType="Self.DailyStatistics" />
           <EntitySet Name="DeletedAdverts" EntityType="Self.DeletedAdverts" />
@@ -2098,7 +2787,10 @@
           <EntitySet Name="DialogMessages" EntityType="Self.DialogMessages" />
           <EntitySet Name="DialogsInfo" EntityType="Self.DialogsInfo" />
           <EntitySet Name="DisLikes" EntityType="Self.DisLikes" />
+          <EntitySet Name="DpdCities" EntityType="Self.DpdCities" />
           <EntitySet Name="Exceptions" EntityType="Self.Exceptions" />
+          <EntitySet Name="ExchangeItemRequests" EntityType="Self.ExchangeItemRequests" />
+          <EntitySet Name="ExchangeProducts" EntityType="Self.ExchangeProducts" />
           <EntitySet Name="Favorites" EntityType="Self.Favorites" />
           <EntitySet Name="FavoritesByCookies" EntityType="Self.FavoritesByCookies" />
           <EntitySet Name="ItemDislikes" EntityType="Self.ItemDislikes" />
@@ -2108,15 +2800,30 @@
           <EntitySet Name="LoginStat" EntityType="Self.LoginStat" />
           <EntitySet Name="LoginStatistics" EntityType="Self.LoginStatistics" />
           <EntitySet Name="Memberships" EntityType="Self.Memberships" />
+          <EntitySet Name="NewAezakmi" EntityType="Self.NewAezakmi" />
           <EntitySet Name="News" EntityType="Self.News" />
+          <EntitySet Name="News_towardsbackwards" EntityType="Self.News_towardsbackwards" />
+          <EntitySet Name="NewsAlexPigalyov" EntityType="Self.NewsAlexPigalyov" />
+          <EntitySet Name="NewsAntares" EntityType="Self.NewsAntares" />
+          <EntitySet Name="NewsAzizjan" EntityType="Self.NewsAzizjan" />
+          <EntitySet Name="NewsBatrebleSs" EntityType="Self.NewsBatrebleSs" />
           <EntitySet Name="NewsEducation" EntityType="Self.NewsEducation" />
+          <EntitySet Name="NewsEducationBlacklake" EntityType="Self.NewsEducationBlacklake" />
+          <EntitySet Name="NewsEoll73" EntityType="Self.NewsEoll73" />
+          <EntitySet Name="NewsGGdotNET" EntityType="Self.NewsGGdotNET" />
+          <EntitySet Name="Newsillfyar" EntityType="Self.Newsillfyar" />
+          <EntitySet Name="NewsIlya" EntityType="Self.NewsIlya" />
+          <EntitySet Name="NewsMrshkVV" EntityType="Self.NewsMrshkVV" />
           <EntitySet Name="NewsRaspel" EntityType="Self.NewsRaspel" />
           <EntitySet Name="NewsVark" EntityType="Self.NewsVark" />
+          <EntitySet Name="NewsVlad" EntityType="Self.NewsVlad" />
           <EntitySet Name="Operations" EntityType="Self.Operations" />
           <EntitySet Name="Payments" EntityType="Self.Payments" />
           <EntitySet Name="Phones" EntityType="Self.Phones" />
+          <EntitySet Name="Rates" EntityType="Self.Rates" />
           <EntitySet Name="Recipes" EntityType="Self.Recipes" />
           <EntitySet Name="Referrals" EntityType="Self.Referrals" />
+          <EntitySet Name="Rent" EntityType="Self.Rent" />
           <EntitySet Name="Roles" EntityType="Self.Roles" />
           <EntitySet Name="Settings" EntityType="Self.Settings" />
           <EntitySet Name="TenderRequest" EntityType="Self.TenderRequest" />
@@ -2128,11 +2835,15 @@
           <EntitySet Name="UserSettings" EntityType="Self.UserSettings" />
           <EntitySet Name="UsersOpenAuthAccounts" EntityType="Self.UsersOpenAuthAccounts" />
           <EntitySet Name="UsersOpenAuthData" EntityType="Self.UsersOpenAuthData" />
+          <EntitySet Name="UsersSearches" EntityType="Self.UsersSearches" />
           <EntitySet Name="UserViews" EntityType="Self.UserViews" />
+          <EntitySet Name="ViewedObjects" EntityType="Self.ViewedObjects" />
           <EntitySet Name="Wallets" EntityType="Self.Wallets" />
           <EntitySet Name="Watched" EntityType="Self.Watched" />
           <EntitySet Name="WatchedByCookies" EntityType="Self.WatchedByCookies" />
           <EntitySet Name="Categories" EntityType="Self.Categories" />
+          <EntitySet Name="NewsShCodder" EntityType="Self.NewsShCodder" />
+          <EntitySet Name="RentedTime" EntityType="Self.RentedTime" />
           <AssociationSet Name="MembershipApplication" Association="Self.MembershipApplication">
             <End Role="Applications" EntitySet="Applications" />
             <End Role="Memberships" EntitySet="Memberships" />
@@ -2237,6 +2948,9 @@
             <Parameter Name="uid" Mode="In" Type="String" />
             <Parameter Name="advertId" Mode="In" Type="Int64" />
           </FunctionImport>
+          <FunctionImport Name="spDPDCitiesTop10" ReturnType="Collection(RentooloModel.spDPDCitiesTop10_Result)">
+            <Parameter Name="text" Mode="In" Type="String" />
+          </FunctionImport>
           <FunctionImport Name="spGetChats" ReturnType="Collection(RentooloModel.spGetChats_Result)">
             <Parameter Name="userId" Mode="In" Type="Guid" />
           </FunctionImport>
@@ -2257,6 +2971,12 @@
           <FunctionImport Name="spGetComplaintsBySender" ReturnType="Collection(RentooloModel.spGetComplaintsBySender_Result)">
             <Parameter Name="userId" Mode="In" Type="Guid" />
           </FunctionImport>
+          <FunctionImport Name="spGetExchangeItemRequests" ReturnType="Collection(RentooloModel.spGetExchangeItemRequests_Result)">
+            <Parameter Name="exchangeItemId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="spGetExchangeProducts" ReturnType="Collection(RentooloModel.spGetExchangeProducts_Result)">
+            <Parameter Name="query" Mode="In" Type="String" />
+          </FunctionImport>
           <FunctionImport Name="spGetFavorites" ReturnType="Collection(RentooloModel.spGetFavorites_Result)">
             <Parameter Name="userId" Mode="In" Type="Guid" />
           </FunctionImport>
@@ -2276,11 +2996,25 @@
           <FunctionImport Name="spGetWatchedByCookies" ReturnType="Collection(RentooloModel.spGetWatchedByCookies_Result)">
             <Parameter Name="uid" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="spUpdateQiwiAccountBalance">
-            <Parameter Name="number" Mode="In" Type="String" />
-            <Parameter Name="balance" Mode="In" Type="Double" />
-          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="spDPDCitiesTop10_Result">
+          <Property Type="Int64" Name="cityId" Nullable="false" />
+          <Property Type="Boolean" Name="cityIdSpecified" Nullable="false" />
+          <Property Type="String" Name="countryCode" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="countryName" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="regionCode" Nullable="false" />
+          <Property Type="Boolean" Name="regionCodeSpecified" Nullable="false" />
+          <Property Type="String" Name="regionName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="cityCode" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="cityName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="abbreviation" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="indexMin" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="indexMax" Nullable="true" MaxLength="50" />
+          <Property Type="Int64" Name="Population" Nullable="true" />
+          <Property Type="String" Name="Settled" Nullable="true" MaxLength="20" />
+          <Property Type="Double" Name="lat" Nullable="true" />
+          <Property Type="Double" Name="lng" Nullable="true" />
+        </ComplexType>
         <ComplexType Name="spGetChats_Result">
           <Property Type="Int64" Name="Id" Nullable="false" />
           <Property Type="String" Name="ChatName" Nullable="true" MaxLength="50" />
@@ -2315,7 +3049,7 @@
         <ComplexType Name="spGetComplaintsByRecipier_Result">
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="Message" Nullable="true" />
-          <Property Type="Int32" Name="СomplaintType" Nullable="false" />
+          <Property Type="Int32" Name="ComplaintType" Nullable="false" />
           <Property Type="Int32" Name="ObjectId" Nullable="false" />
           <Property Type="Int32" Name="ObjectType" Nullable="false" />
           <Property Type="Guid" Name="UserSender" Nullable="false" />
@@ -2327,7 +3061,7 @@
         <ComplexType Name="spGetComplaintsBySender_Result">
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="Message" Nullable="true" />
-          <Property Type="Int32" Name="СomplaintType" Nullable="false" />
+          <Property Type="Int32" Name="ComplaintType" Nullable="false" />
           <Property Type="Int32" Name="ObjectId" Nullable="false" />
           <Property Type="Int32" Name="ObjectType" Nullable="false" />
           <Property Type="Guid" Name="UserSender" Nullable="false" />
@@ -2335,6 +3069,29 @@
           <Property Type="DateTime" Name="Data" Nullable="false" Precision="23" />
           <Property Type="String" Name="UserSenderName" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="UserRecipierName" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="spGetExchangeItemRequests_Result">
+          <Property Type="Int64" Name="id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Color" Nullable="true" MaxLength="50" />
+          <Property Type="Int64" Name="advertId" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetExchangeProducts_Result">
+          <Property Type="Int64" Name="Id" Nullable="false" />
+          <Property Type="Int64" Name="AdvertId" Nullable="false" />
+          <Property Type="String" Name="Comment" Nullable="true" />
+          <Property Type="String" Name="WantedObject" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Header" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Category" Nullable="true" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="Created" Nullable="true" Precision="23" />
+          <Property Type="Double" Name="Price" Nullable="true" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="150" />
+          <Property Type="Boolean" Name="IsApproved" Nullable="true" />
+          <Property Type="Int32" Name="Subcategory" Nullable="true" />
+          <Property Type="String" Name="Color" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Vin" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Brand" Nullable="true" />
         </ComplexType>
         <ComplexType Name="spGetFavorites_Result">
           <Property Type="Int64" Name="Id" Nullable="false" />
@@ -2556,6 +3313,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ChatInviteTokens">
+            <EntityTypeMapping TypeName="RentooloModel.ChatInviteTokens">
+              <MappingFragment StoreEntitySet="ChatInviteTokens">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ChatId" ColumnName="ChatId" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="ChatMessages">
             <EntityTypeMapping TypeName="RentooloModel.ChatMessages">
               <MappingFragment StoreEntitySet="ChatMessages">
@@ -2574,6 +3341,7 @@
                 <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
                 <ScalarProperty Name="ChatName" ColumnName="ChatName" />
                 <ScalarProperty Name="ChatType" ColumnName="ChatType" />
+                <ScalarProperty Name="AnotherOwnerId" ColumnName="AnotherOwnerId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2606,12 +3374,59 @@
               <MappingFragment StoreEntitySet="Complaints">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="СomplaintType" ColumnName="СomplaintType" />
+                <ScalarProperty Name="ComplaintType" ColumnName="ComplaintType" />
                 <ScalarProperty Name="ObjectId" ColumnName="ObjectId" />
                 <ScalarProperty Name="ObjectType" ColumnName="ObjectType" />
                 <ScalarProperty Name="UserSender" ColumnName="UserSender" />
                 <ScalarProperty Name="UserRecipier" ColumnName="UserRecipier" />
                 <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CraftsMan">
+            <EntityTypeMapping TypeName="RentooloModel.CraftsMan">
+              <MappingFragment StoreEntitySet="CraftsMan">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Craft" ColumnName="Craft" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="ImgUrls" ColumnName="ImgUrls" />
+                <ScalarProperty Name="YouTubeUrl" ColumnName="YouTubeUrl" />
+                <ScalarProperty Name="Subcategory" ColumnName="Subcategory" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CraftsManOrder">
+            <EntityTypeMapping TypeName="RentooloModel.CraftsManOrder">
+              <MappingFragment StoreEntitySet="CraftsManOrder">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="NameTask" ColumnName="NameTask" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="ImgUrls" ColumnName="ImgUrls" />
+                <ScalarProperty Name="YouTubeUrl" ColumnName="YouTubeUrl" />
+                <ScalarProperty Name="Subcategory" ColumnName="Subcategory" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2696,6 +3511,28 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="DpdCities">
+            <EntityTypeMapping TypeName="RentooloModel.DpdCities">
+              <MappingFragment StoreEntitySet="DpdCities">
+                <ScalarProperty Name="cityId" ColumnName="cityId" />
+                <ScalarProperty Name="cityIdSpecified" ColumnName="cityIdSpecified" />
+                <ScalarProperty Name="countryCode" ColumnName="countryCode" />
+                <ScalarProperty Name="countryName" ColumnName="countryName" />
+                <ScalarProperty Name="regionCode" ColumnName="regionCode" />
+                <ScalarProperty Name="regionCodeSpecified" ColumnName="regionCodeSpecified" />
+                <ScalarProperty Name="regionName" ColumnName="regionName" />
+                <ScalarProperty Name="cityCode" ColumnName="cityCode" />
+                <ScalarProperty Name="cityName" ColumnName="cityName" />
+                <ScalarProperty Name="abbreviation" ColumnName="abbreviation" />
+                <ScalarProperty Name="indexMin" ColumnName="indexMin" />
+                <ScalarProperty Name="indexMax" ColumnName="indexMax" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="lng" ColumnName="lng" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Exceptions">
             <EntityTypeMapping TypeName="RentooloModel.Exceptions">
               <MappingFragment StoreEntitySet="Exceptions">
@@ -2703,6 +3540,28 @@
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="WhenDate" ColumnName="WhenDate" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExchangeItemRequests">
+            <EntityTypeMapping TypeName="RentooloModel.ExchangeItemRequests">
+              <MappingFragment StoreEntitySet="ExchangeItemRequests">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ExchangeItemId" ColumnName="ExchangeItemId" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="WantedExchangeItemId" ColumnName="WantedExchangeItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExchangeProducts">
+            <EntityTypeMapping TypeName="RentooloModel.ExchangeProducts">
+              <MappingFragment StoreEntitySet="ExchangeProducts">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AdvertId" ColumnName="AdvertId" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="WantedObject" ColumnName="WantedObject" />
+                <ScalarProperty Name="Header" ColumnName="Header" />
+                <ScalarProperty Name="SelectedRequestId" ColumnName="SelectedRequestId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2822,6 +3681,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="NewAezakmi">
+            <EntityTypeMapping TypeName="RentooloModel.NewAezakmi">
+              <MappingFragment StoreEntitySet="NewAezakmi">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Authorld" ColumnName="Authorld" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="News">
             <EntityTypeMapping TypeName="RentooloModel.News">
               <MappingFragment StoreEntitySet="News">
@@ -2834,9 +3705,141 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="News_towardsbackwards">
+            <EntityTypeMapping TypeName="RentooloModel.News_towardsbackwards">
+              <MappingFragment StoreEntitySet="News_towardsbackwards">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsAlexPigalyov">
+            <EntityTypeMapping TypeName="RentooloModel.NewsAlexPigalyov">
+              <MappingFragment StoreEntitySet="NewsAlexPigalyov">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsAntares">
+            <EntityTypeMapping TypeName="RentooloModel.NewsAntares">
+              <MappingFragment StoreEntitySet="NewsAntares">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="text" ColumnName="text" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="authorId" ColumnName="authorId" />
+                <ScalarProperty Name="createDate" ColumnName="createDate" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsAzizjan">
+            <EntityTypeMapping TypeName="RentooloModel.NewsAzizjan">
+              <MappingFragment StoreEntitySet="NewsAzizjan">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsBatrebleSs">
+            <EntityTypeMapping TypeName="RentooloModel.NewsBatrebleSs">
+              <MappingFragment StoreEntitySet="NewsBatrebleSs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="NewsEducation">
             <EntityTypeMapping TypeName="RentooloModel.NewsEducation">
               <MappingFragment StoreEntitySet="NewsEducation">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsEducationBlacklake">
+            <EntityTypeMapping TypeName="RentooloModel.NewsEducationBlacklake">
+              <MappingFragment StoreEntitySet="NewsEducationBlacklake">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsEoll73">
+            <EntityTypeMapping TypeName="RentooloModel.NewsEoll73">
+              <MappingFragment StoreEntitySet="NewsEoll73">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsGGdotNET">
+            <EntityTypeMapping TypeName="RentooloModel.NewsGGdotNET">
+              <MappingFragment StoreEntitySet="NewsGGdotNET">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Newsillfyar">
+            <EntityTypeMapping TypeName="RentooloModel.Newsillfyar">
+              <MappingFragment StoreEntitySet="Newsillfyar">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsIlya">
+            <EntityTypeMapping TypeName="RentooloModel.NewsIlya">
+              <MappingFragment StoreEntitySet="NewsIlya">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsMrshkVV">
+            <EntityTypeMapping TypeName="RentooloModel.NewsMrshkVV">
+              <MappingFragment StoreEntitySet="NewsMrshkVV">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
@@ -2862,6 +3865,18 @@
             <EntityTypeMapping TypeName="RentooloModel.NewsVark">
               <MappingFragment StoreEntitySet="NewsVark">
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsVlad">
+            <EntityTypeMapping TypeName="RentooloModel.NewsVlad">
+              <MappingFragment StoreEntitySet="NewsVlad">
+                <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
@@ -2912,6 +3927,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Rates">
+            <EntityTypeMapping TypeName="RentooloModel.Rates">
+              <MappingFragment StoreEntitySet="Rates">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Recipes">
             <EntityTypeMapping TypeName="RentooloModel.Recipes">
               <MappingFragment StoreEntitySet="Recipes">
@@ -2933,6 +3957,24 @@
                 <ScalarProperty Name="ReferrerUserId" ColumnName="ReferrerUserId" />
                 <ScalarProperty Name="ReferralUserId" ColumnName="ReferralUserId" />
                 <ScalarProperty Name="WhenDate" ColumnName="WhenDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rent">
+            <EntityTypeMapping TypeName="RentooloModel.Rent">
+              <MappingFragment StoreEntitySet="Rent">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DateStart" ColumnName="DateStart" />
+                <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="UserOwnerId" ColumnName="UserOwnerId" />
+                <ScalarProperty Name="RentType" ColumnName="RentType" />
+                <ScalarProperty Name="DayRentPrice" ColumnName="DayRentPrice" />
+                <ScalarProperty Name="HourRentPrice" ColumnName="HourRentPrice" />
+                <ScalarProperty Name="MinuteRentPrice" ColumnName="MinuteRentPrice" />
+                <ScalarProperty Name="ImgUrls" ColumnName="ImgUrls" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3081,6 +4123,23 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="UsersSearches">
+            <EntityTypeMapping TypeName="RentooloModel.UsersSearches">
+              <MappingFragment StoreEntitySet="UsersSearches">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Search" ColumnName="Search" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="OnlyInName" ColumnName="OnlyInName" />
+                <ScalarProperty Name="StartPrice" ColumnName="StartPrice" />
+                <ScalarProperty Name="EndPrice" ColumnName="EndPrice" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="SortBy" ColumnName="SortBy" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="UserViews">
             <EntityTypeMapping TypeName="RentooloModel.UserViews">
               <MappingFragment StoreEntitySet="UserViews">
@@ -3088,6 +4147,17 @@
                 <ScalarProperty Name="ObjectId" ColumnName="ObjectId" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ViewedObjects">
+            <EntityTypeMapping TypeName="RentooloModel.ViewedObjects">
+              <MappingFragment StoreEntitySet="ViewedObjects">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ObjectId" ColumnName="ObjectId" />
+                <ScalarProperty Name="ObjectType" ColumnName="ObjectType" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3131,6 +4201,28 @@
                 <ScalarProperty Name="Name_Ru_" ColumnName="Name(Ru)" />
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
                 <ScalarProperty Name="ParentCategoryId" ColumnName="ParentCategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsShCodder">
+            <EntityTypeMapping TypeName="RentooloModel.NewsShCodder">
+              <MappingFragment StoreEntitySet="NewsShCodder">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AuthorId" ColumnName="AuthorId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RentedTime">
+            <EntityTypeMapping TypeName="RentooloModel.RentedTime">
+              <MappingFragment StoreEntitySet="RentedTime">
+                <ScalarProperty Name="RentId" ColumnName="RentId" />
+                <ScalarProperty Name="TimeStart" ColumnName="TimeStart" />
+                <ScalarProperty Name="TimeEnd" ColumnName="TimeEnd" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3206,6 +4298,28 @@
           <FunctionImportMapping FunctionImportName="spAddFavoritesByCookies" FunctionName="Хранилище RentooloModel.spAddFavoritesByCookies" />
           <FunctionImportMapping FunctionImportName="spAddWatched" FunctionName="Хранилище RentooloModel.spAddWatched" />
           <FunctionImportMapping FunctionImportName="spAddWatchedByCookies" FunctionName="Хранилище RentooloModel.spAddWatchedByCookies" />
+          <FunctionImportMapping FunctionImportName="spDPDCitiesTop10" FunctionName="Хранилище RentooloModel.spDPDCitiesTop10">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RentooloModel.spDPDCitiesTop10_Result">
+                <ScalarProperty Name="cityId" ColumnName="cityId" />
+                <ScalarProperty Name="cityIdSpecified" ColumnName="cityIdSpecified" />
+                <ScalarProperty Name="countryCode" ColumnName="countryCode" />
+                <ScalarProperty Name="countryName" ColumnName="countryName" />
+                <ScalarProperty Name="regionCode" ColumnName="regionCode" />
+                <ScalarProperty Name="regionCodeSpecified" ColumnName="regionCodeSpecified" />
+                <ScalarProperty Name="regionName" ColumnName="regionName" />
+                <ScalarProperty Name="cityCode" ColumnName="cityCode" />
+                <ScalarProperty Name="cityName" ColumnName="cityName" />
+                <ScalarProperty Name="abbreviation" ColumnName="abbreviation" />
+                <ScalarProperty Name="indexMin" ColumnName="indexMin" />
+                <ScalarProperty Name="indexMax" ColumnName="indexMax" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Settled" ColumnName="Settled" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="lng" ColumnName="lng" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="spGetChats" FunctionName="Хранилище RentooloModel.spGetChats">
             <ResultMapping>
               <ComplexTypeMapping TypeName="RentooloModel.spGetChats_Result">
@@ -3258,7 +4372,7 @@
               <ComplexTypeMapping TypeName="RentooloModel.spGetComplaintsByRecipier_Result">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="СomplaintType" ColumnName="СomplaintType" />
+                <ScalarProperty Name="ComplaintType" ColumnName="ComplaintType" />
                 <ScalarProperty Name="ObjectId" ColumnName="ObjectId" />
                 <ScalarProperty Name="ObjectType" ColumnName="ObjectType" />
                 <ScalarProperty Name="UserSender" ColumnName="UserSender" />
@@ -3274,7 +4388,7 @@
               <ComplexTypeMapping TypeName="RentooloModel.spGetComplaintsBySender_Result">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="СomplaintType" ColumnName="СomplaintType" />
+                <ScalarProperty Name="ComplaintType" ColumnName="ComplaintType" />
                 <ScalarProperty Name="ObjectId" ColumnName="ObjectId" />
                 <ScalarProperty Name="ObjectType" ColumnName="ObjectType" />
                 <ScalarProperty Name="UserSender" ColumnName="UserSender" />
@@ -3282,6 +4396,37 @@
                 <ScalarProperty Name="Data" ColumnName="Data" />
                 <ScalarProperty Name="UserSenderName" ColumnName="UserSenderName" />
                 <ScalarProperty Name="UserRecipierName" ColumnName="UserRecipierName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetExchangeItemRequests" FunctionName="Хранилище RentooloModel.spGetExchangeItemRequests">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RentooloModel.spGetExchangeItemRequests_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="advertId" ColumnName="advertId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetExchangeProducts" FunctionName="Хранилище RentooloModel.spGetExchangeProducts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RentooloModel.spGetExchangeProducts_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AdvertId" ColumnName="AdvertId" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="WantedObject" ColumnName="WantedObject" />
+                <ScalarProperty Name="Header" ColumnName="Header" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="Subcategory" ColumnName="Subcategory" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Vin" ColumnName="Vin" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3405,7 +4550,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spUpdateQiwiAccountBalance" FunctionName="Хранилище RentooloModel.spUpdateQiwiAccountBalance" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

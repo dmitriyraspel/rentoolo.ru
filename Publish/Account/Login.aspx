@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="Вход" Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="Rentoolo.Account.Login" %>
 
+<%@ Register Src="~/Account/OpenAuthProviders.ascx" TagPrefix="uc" TagName="OpenAuthProviders" %>
+<%@ Register Src="~/Account/CaptchaUserControl.ascx" TagPrefix="uc" TagName="CaptchaUserControl" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +20,7 @@
     <link href="/assets/css/toolkit.css" rel="stylesheet">
 
     <link href="/assets/css/application.css" rel="stylesheet">
-    <link href="/assets/css/additional.css?7" rel="stylesheet">
+    <link href="/assets/css/additional.css?78" rel="stylesheet">
 
 
     <style>
@@ -28,20 +31,26 @@
         }
     </style>
 
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
-   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date(); k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-   ym(55995166, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true
-   });
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/55995166" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+        ym(55995166, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true
+        });
+    </script>
+    <noscript>
+        <div>
+            <img src="https://mc.yandex.ru/watch/55995166" style="position: absolute; left: -9999px;" alt="" />
+        </div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
 
 </head>
 
@@ -50,7 +59,8 @@
     <div class="container-fluid container-fill-height">
         <div class="container-content-middle">
             <form id="form1" role="form" class="mx-auto text-center app-login-form" runat="server">
-                <asp:Login runat="server" ViewStateMode="Disabled" RenderOuterTable="false" OnLoggingIn="On_LoggingIn" DisplayRememberMe="False" OnLoggedIn="Unnamed1_LoggedIn">
+
+                <asp:Login ID="Login1" runat="server" ViewStateMode="Disabled" RenderOuterTable="false" OnLoggingIn="On_LoggingIn" OnAuthenticate="Authenticate" DisplayRememberMe="False">
                     <LayoutTemplate>
                         <a href="/" class="app-brand mb-5">
                             <span class="logo-text" style="margin-right: -3px;">Rent</span>
@@ -60,20 +70,20 @@
 
                         <div class="form-group">
                             <asp:TextBox runat="server" CssClass="form-control login-input" ID="UserName" placeholder="Username" />
-                            <div class="div-validation-error">
-                                        <asp:RequiredFieldValidator ID="RequiredFieldValidatorUserName" runat="server" ControlToValidate="UserName" CssClass="field-validation-error" ErrorMessage="*" /></div>
+                        </div>
+                        <div class="text-danger">
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidatorUserName" runat="server" ControlToValidate="UserName" CssClass="field-validation-error" Display="Dynamic" ErrorMessage="Введите имя пользователя" />
                         </div>
 
                         <div class="form-group mb-3">
                             <asp:TextBox runat="server" CssClass="form-control login-input" ID="Password" TextMode="Password" placeholder="Пароль" />
-                            <div class="div-validation-error">
-                                        <asp:RequiredFieldValidator ID="RequiredFieldValidatorPassword" runat="server" ControlToValidate="Password" CssClass="field-validation-error" ErrorMessage="*" /></div>
                         </div>
-                        
-                        <div class="form-group">
-                            <div class="g-recaptcha" data-sitekey="6Lf4W6QUAAAAAPK2AR7Ms8SsI9_KuJ0l8XZWaTWD"></div>
+                        <div class="text-danger">
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidatorPassword" runat="server" ControlToValidate="Password" CssClass="field-validation-error" Display="Dynamic" ErrorMessage="Введите пароль" />
                         </div>
-                        
+
+                        <uc:CaptchaUserControl runat="server" ID="CaptchaUserControl1" />
+
                         <div class="mb-5">
                             <asp:Button ID="ButtonLogin" runat="server" CssClass="btn btn-primary" CommandName="Login" Text="Вход" />
                             <button type="button" class="btn btn-secondary" onclick="location.href='/Account/SignUp?ReturnUrl='">Регистрация</button>
@@ -82,8 +92,12 @@
                         <footer class="screen-login">
                             <a href="#" class="text-muted">Забыли пароль</a>
                         </footer>
+                        <div class="col-md-4">
+                            <uc:OpenAuthProviders runat="server" ID="OpenAuthLogin" />
+                        </div>
                     </LayoutTemplate>
                 </asp:Login>
+
             </form>
         </div>
     </div>

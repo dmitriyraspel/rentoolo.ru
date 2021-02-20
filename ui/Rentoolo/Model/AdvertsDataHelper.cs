@@ -10,15 +10,15 @@ namespace Rentoolo.Model
     {
         #region Объявления
 
-        public static TEntity Get<TEntity>(long id) where TEntity : class
-        {
-            using (var dc = new RentooloEntities())
-            {
-                var items = (DbSet<TEntity>)dc.GetType().GetProperty(typeof(TEntity).Name).GetValue(dc);
-                var item = items.AsEnumerable().FirstOrDefault(x => Convert.ToInt64(typeof(TEntity).GetProperty("Id").GetValue(x)) == id);
-                return item;
-            }
-        }
+        //public static TEntity Get<TEntity>(long id) where TEntity : class
+        //{
+        //    using (var dc = new RentooloEntities())
+        //    {
+        //        var items = (DbSet<TEntity>)dc.GetType().GetProperty(typeof(TEntity).Name).GetValue(dc);
+        //        var item = items.AsEnumerable().FirstOrDefault(x => Convert.ToInt64(typeof(TEntity).GetProperty("Id").GetValue(x)) == id);
+        //        return item;
+        //    }
+        //}
         public static List<Adverts> GetAdverts()
         {
             using (var ctx = new RentooloEntities())
@@ -28,6 +28,17 @@ namespace Rentoolo.Model
                 return list;
             }
         }
+
+        public static List<Adverts> GetAdverts(Guid userId)
+        {
+            using (var ctx = new RentooloEntities())
+            {
+                var list = ctx.Adverts.Where(x=>x.CreatedUserId == userId).OrderByDescending(x => x.Created).ToList();
+
+                return list;
+            }
+        }
+
 
         public static Adverts GetAdvert(long id)
         {
@@ -105,19 +116,18 @@ namespace Rentoolo.Model
                     result = result.Where(x => x.Address.Contains(filter.City));
                 }
 
-
                 switch (filter.SortBy)
                 {
-                    case "by date":
+                    case "date":
                         result = result.OrderBy(x => x.Created);
                         break;
-                    case "by price":
+                    case "price":
                         result = result.OrderBy(x => x.Price);
                         break;
-                    case "by date descendance":
+                    case "date_desc":
                         result = result.OrderByDescending(x => x.Created);
                         break;
-                    case "by price descendance":
+                    case "price_desc":
                         result = result.OrderByDescending(x => x.Price);
                         break;
                     default:
@@ -125,11 +135,9 @@ namespace Rentoolo.Model
                         break;
                 }
 
-
                 return result.ToList();
             }
         }
-
 
         // unused
         //static IQueryable<Adverts> filterAdverts(this IQueryable<Adverts> adverts, DateTime startDate, DateTime endDate)

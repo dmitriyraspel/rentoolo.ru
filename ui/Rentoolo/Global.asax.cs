@@ -11,6 +11,10 @@ using System.Web.Http;
 using Rentoolo.TestDir;
 using Rentoolo.HelperModels;
 
+using System.Web.Mvc;
+using System.Web.Routing;
+using System.Web.Optimization;
+
 namespace Rentoolo
 {
     public class Global : HttpApplication
@@ -24,11 +28,18 @@ namespace Rentoolo
             AuthConfig.RegisterOpenAuth();
             WSServer.Serve();
 
-            RusCities.InitAllCities();
+            //RusCities.InitAllCities();
 
             RegisterRoutes(RouteTable.Routes);
 
             SqlServerTypes.Utilities.LoadNativeAssemblies(Server.MapPath("~/bin"));
+
+            // init mvc
+            AreaRegistration.RegisterAllAreas();
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            BundleConfig2.RegisterBundles(BundleTable.Bundles);
+
         }
 
         void Application_End(object sender, EventArgs e)
@@ -101,6 +112,10 @@ namespace Rentoolo
             routes.MapPageRoute("loginRoute",
                 "Account/Login",
                 "~/Account/Login.aspx");
+
+            routes.MapPageRoute("RegisterExternalLogin",
+                "Account/RegisterExternalLogin",
+                "~/Account/RegisterExternalLogin.aspx");
 
             routes.MapPageRoute("rentAddItemRoute",
                 "Account/Rent",

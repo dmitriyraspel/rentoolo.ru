@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Rentoolo.Model.HelperStructs;
 using Rentoolo.TestDir;
 using System;
 using System.Collections.Generic;
@@ -125,6 +126,19 @@ namespace Rentoolo.Model
             }
         }
 
+        public static Memberships GetUserMembershipByEmail(string email)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                Memberships membership = dc.Memberships.FirstOrDefault(x => x.Email == email);
+
+                return membership;
+            }
+        }
+
+
+
+
         public static Users GetUserByRefId(int refId)
         {
             using (var ctx = new RentooloEntities())
@@ -164,6 +178,17 @@ namespace Rentoolo.Model
                 var obj = ctx.Users.FirstOrDefault(x => x.UserId == user.UserId);
                 obj.BirthDay = user.BirthDay;
                 ctx.SaveChanges();
+
+
+                AddOperation(new Operations()
+                {
+                    UserId = user.UserId,
+                    Type = (int)OperationTypesEnum.BirthDayChange,
+                    WhenDate = DateTime.Now,
+                    Comment = "",
+                    Value = 0
+                });
+
             }
         }
 
@@ -1198,12 +1223,14 @@ namespace Rentoolo.Model
         {
             using (var dc = new RentooloEntities())
             {
-                var views = dc.UserViews.Where(x => x.UserId == userView.UserId).OrderBy(x => x.Date);
-                if (views.Any())
-                {
-                    int count = views.Count();
+                var views = dc.UserViews.OrderByDescending(x => x.Date)
+                        .FirstOrDefault(x => x.UserId == userView.UserId
+                        && x.ObjectId == userView.ObjectId && x.Type == userView.Type);
 
-                    if ((views.ToArray()[count - 1].Date.Date - DateTime.Now.Date).Days >= 1)
+                if (views != null)
+                {
+
+                    if ((views.Date.Date - DateTime.Now.Date).Days >= 1)
                     {
                         dc.UserViews.Add(userView);
                         dc.SaveChanges();
@@ -1217,6 +1244,127 @@ namespace Rentoolo.Model
 
             }
         }
+
+
+        public static List<UserViews> GetUserViews(int objectId, int type)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                return dc.UserViews.Where(x => (x.ObjectId == objectId) && (x.Type == type)).ToList();
+            }
+        }
+
+        public static List<UserViews> GetUserViews(int? type, Guid userId, DateTime? startDate, DateTime? endDate)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                var result = dc.UserViews.Where(x => x.UserId == userId);
+                if (type != null)
+                {
+                    result = result.Where(x => x.Type == (int)type);
+                }
+
+
+                if (startDate != null)
+                {
+                    result = result.Where(x => x.Date >= startDate);
+                }
+
+                if (endDate != null)
+                {
+                    result = result.Where(x => x.Date <= endDate);
+                }
+
+                return result.ToList();
+            }
+        }
+
+
+
+
+        public static List<SelIItem> GetSellItems(int type, Guid userId, DateTime? startDate, DateTime? endDate)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                var views = dc.UserViews.Where(x => x.UserId == userId);
+
+                views = views.Where(x => x.Type == (int)type);
+
+                if (startDate != null)
+                {
+                    views = views.Where(x => x.Date >= startDate);
+                }
+
+                if (endDate != null)
+                {
+                    views = views.Where(x => x.Date <= endDate);
+                }
+
+
+                IQueryable<SelIItem> items;
+
+                switch (type)
+                {
+                    case 1:
+                        var filteredAdverts = dc.Adverts.Where(a => views.Select(v => (long)v.ObjectId).Contains(a.Id));
+
+                        items = filteredAdverts
+                            .Select(p => new SelIItem()
+                            {
+                                Name = p.Name,
+                                Type = 1,
+                                Id = p.Id
+                            });
+
+                        return items.ToList();
+                    case 2:
+                        var filteredTenders = dc.Tenders.Where(a => views.Select(v => (long)v.ObjectId).Contains(a.Id));
+
+                        items = filteredTenders
+                            .Select(p => new SelIItem()
+                            {
+                                Name = p.Name,
+                                Type = 1,
+                                Id = p.Id
+                            });
+
+                        return items.ToList();
+                    case 3:
+                        var filteredAuctions = dc.Auctions.Where(a => views.Select(v => (long)v.ObjectId).Contains(a.Id));
+
+                        items = filteredAuctions
+                            .Select(p => new SelIItem()
+                            {
+                                Name = p.Name,
+                                Type = 1,
+                                Id = p.Id
+                            });
+
+                        return items.ToList();
+                    default:
+                        return new List<SelIItem>();
+
+                }
+
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         public static int GetUserViewsCount(int objectId, int type)
@@ -1726,6 +1874,52 @@ namespace Rentoolo.Model
 
         #region Chats
 
+        public static long CreateChatDialog(Guid userId1, Guid userId2)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                dc.Chats.Add(new Chats()
+                {
+                    ChatType = 1,
+                    OwnerId = userId1,
+                    AnotherOwnerId = userId2
+                });
+                dc.SaveChanges();
+
+                long chatId = dc.Chats.First(x => (x.OwnerId == userId1 && x.AnotherOwnerId == userId2)
+                    || (x.OwnerId == userId2 && x.AnotherOwnerId == userId1)).Id;
+
+                dc.ChatUsers.Add(new ChatUsers() { UserId = userId1, ChatId = chatId });
+                dc.ChatUsers.Add(new ChatUsers() { UserId = userId2, ChatId = chatId });
+
+                dc.SaveChanges();
+
+                return chatId;
+            }
+        }
+
+
+
+        public static bool CheckDialogExistance(Guid userId1, Guid userId2)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                return dc.Chats
+                    .FirstOrDefault(x => (x.OwnerId == userId1 && x.AnotherOwnerId == userId2)
+                    || (x.OwnerId == userId2 && x.AnotherOwnerId == userId1)) != null;
+            }
+        }
+
+
+        public static long GetDialogId(Guid userId1, Guid userId2)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                return dc.Chats
+                    .FirstOrDefault(x => (x.OwnerId == userId1 && x.AnotherOwnerId == userId2)
+                    || (x.OwnerId == userId2 && x.AnotherOwnerId == userId1)).Id;
+            }
+        }
 
         public static List<spGetChatsForUser_Result> GetChatsForUser(Guid userId, int skipCount = 0)
         {
@@ -1757,6 +1951,31 @@ namespace Rentoolo.Model
         }
 
 
+        public static void CreateChatDialogIfNotExist(Guid userId1, Guid userId2)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                var chats = dc.ChatUsers.Where(x => x.UserId == userId1 || x.UserId == userId2).Select(x=>x.ChatId);
+
+                var chat = dc.Chats.Where(x => chats.Contains(x.Id)).FirstOrDefault(x=>x.ChatType == 1);
+
+                bool exists = chat == null ? false : true;
+
+                if (!exists)
+                {
+
+                    var chatCreated = dc.Chats.Add(new Chats() { ChatType = 1 });
+                    
+                    dc.SaveChanges();
+
+                    // TODO: get created chat id and add users in it
+                    //long chatId = 
+
+                }
+
+
+            }
+        }
 
 
 
@@ -1764,6 +1983,7 @@ namespace Rentoolo.Model
         {
             using (var dc = new RentooloEntities())
             {
+                chatInfo.ChatType = 1;
                 dc.Chats.Add(chatInfo);
                 dc.SaveChanges();
 
@@ -1776,9 +1996,38 @@ namespace Rentoolo.Model
             }
         }
 
+        /// <summary>
+        /// get collection of users that have dialogs with this user
+        /// </summary>
+        /// <param name="userId"> user id that has dialogs</param>
+        /// <returns>collection of users that have dialogs with this user</returns>
+        public static List<Users> GetDialogUsers(Guid userId)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                var userDialogs = dc.Chats.Where(x => x.ChatType == 1)
+                    .Where(x => x.OwnerId == userId || x.AnotherOwnerId == userId);
+
+                //var companions1 = userDialogs.Where(x => x.OwnerId == userId).Select(x => x.AnotherOwnerId);
+                //var companions2 = userDialogs.Where(x => x.AnotherOwnerId == userId).Select(x => x.OwnerId);
+                var udl = userDialogs.ToList();
+
+                var companionIds = from d in userDialogs
+                                 select d.AnotherOwnerId == userId ?
+                                  d.OwnerId : d.AnotherOwnerId;
+
+                var cpd = companionIds.ToList();
+
+                var users = dc.Users.Where(x => companionIds.Contains(x.UserId));
 
 
-        public static void CreateChat(Chats chatInfo)
+                return users.ToList();
+            }
+        }
+
+
+
+        public static long CreateChat(Chats chatInfo)
         {
             using (var dc = new RentooloEntities())
             {
@@ -1788,18 +2037,94 @@ namespace Rentoolo.Model
 
                 long chatId = dc.Chats.First(x => x.Id == chatInfo.Id).Id;
                 dc.ChatUsers.Add(new ChatUsers() { UserId = chatInfo.OwnerId, ChatId = chatId });
+                //dc.SaveChanges();
+
+                dc.ChatInviteTokens.Add(new ChatInviteTokens()
+                {
+                    ChatId = chatId,
+                    Token = Guid.NewGuid(),
+                    Status = 0
+                });
+
                 dc.SaveChanges();
+
+                return chatId;
             }
         }
 
 
+        public static Chats GetChatByToken(Guid token)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                long chatId = dc.ChatInviteTokens.First(x => x.Token == token).ChatId;
+                var chat = dc.Chats.First(x => x.Id == chatId);
 
-        public static List<Chats> GetChats(Guid userId, int skipCount = 0)
+                return chat;
+            }
+        }
+
+        public static ChatInviteTokens GetChatTokenInfo(Guid token)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                return dc.ChatInviteTokens.First(x => x.Token == token);
+            }
+        }
+
+
+        public static List<Chats> GetChats(Guid userId)
         {
             using (var dc = new RentooloEntities())
             {
                 var chatIds = dc.ChatUsers.Where(x => x.UserId == userId).Select(x => x.Id).ToList();
                 var chats = dc.Chats.Where(x => chatIds.Contains(x.Id));
+                return chats.ToList();
+            }
+        }
+
+
+        public static List<Chats> GetGroupChats(Guid userId)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                var chatIds = dc.ChatUsers
+                    .Where(x => x.UserId == userId)
+                    .Select(x => x.Id).ToList();
+
+                var chats = dc.Chats.Where(x=>x.ChatType == 0)
+                    .Where(x => chatIds.Contains(x.Id));
+
+                return chats.ToList();
+            }
+        }
+
+
+        public static List<Chats> GetOwnerChats(Guid userOwnerId)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                var chats = dc.Chats.Where(x=>x.ChatType == 0)
+                    .Where(x => x.OwnerId == userOwnerId);
+
+                return chats.ToList();
+            }
+        }
+
+
+
+
+        public static List<Chats> GetDialogChats(Guid userId)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                var chatIds = dc.ChatUsers
+                    .Where(x => x.UserId == userId)
+                    .Select(x => x.Id).ToList();
+
+                var chats = dc.Chats.Where(x => x.ChatType == 1)
+                    .Where(x => chatIds.Contains(x.Id));
+
                 return chats.ToList();
             }
         }
@@ -1816,6 +2141,15 @@ namespace Rentoolo.Model
             }
         }
 
+
+        public static void AddChatUsers(IEnumerable<ChatUsers> chatUsers)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                dc.ChatUsers.AddRange(chatUsers);
+                dc.SaveChanges();
+            }
+        }
 
 
 
@@ -1894,7 +2228,7 @@ namespace Rentoolo.Model
         {
             using (var dc = new RentooloEntities())
             {
-                return dc.Complaints.FirstOrDefault(x => x.СomplaintType == complaintType && x.ObjectType == complaintObjectType);
+                return dc.Complaints.FirstOrDefault(x => x.ComplaintType == complaintType && x.ObjectType == complaintObjectType);
             }
         }
 
@@ -1923,6 +2257,11 @@ namespace Rentoolo.Model
             }
         }
 
+
+
+
+
+
         public static List<Complaints> GetComplaints(Guid userId, bool isRecipier)
         {
             using (var dc = new RentooloEntities())
@@ -1939,6 +2278,49 @@ namespace Rentoolo.Model
         }
 
 
+
+        public static List<Complaints> GetFilteredComplaints(ComplaintsFilter filter)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                var res = dc.Complaints.Select(x => x);
+
+
+                if (filter.Status != null)
+                {
+                    res = res.Where(x => x.Status == filter.Status);
+                }
+
+
+                if (filter.ObjectType != null && filter.ObjectType != 0)
+                {
+                    res = res.Where(x => x.ObjectType == filter.ObjectType);
+                }
+
+
+                if ((filter.ObjectId != null) && (filter.ObjectId != 0))
+                {
+                    res = res.Where(x => x.ObjectId == filter.ObjectId);
+                }
+
+                if (filter.UserRecipier != null)
+                {
+                    res = res.Where(x => x.UserRecipier == filter.UserRecipier);
+                }
+
+                if (filter.UserSender != null)
+                {
+                    res = res.Where(x => x.UserSender == filter.UserSender);
+                }
+
+
+
+                return res.ToList();
+            }
+        }
+
+
+
         public static List<Complaints> GetComplaints(int objectId, int objectType)
         {
             using (var dc = new RentooloEntities())
@@ -1948,10 +2330,21 @@ namespace Rentoolo.Model
         }
 
 
+        public static void SetComplaintStatus(int complaintId, string status)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                dc.Complaints.First(x => x.Id == complaintId).Status = (byte?)StructsHelper.ComplaintStatus[status];
+                dc.SaveChanges();
+            }
+        }
+
+
         public static void AddComplaint(Complaints complaint)
         {
             using (var dc = new RentooloEntities())
             {
+                complaint.Status = 0;
                 dc.Complaints.Add(complaint);
                 dc.SaveChanges();
             }
@@ -1959,5 +2352,134 @@ namespace Rentoolo.Model
 
 
         #endregion
+
+
+        #region filters
+
+        public static UsersSearches GetLastUserSearch(Guid userId)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                return dc.UsersSearches.OrderBy(x => x.Date).First(xNet => xNet.UserId == userId);
+            }
+        }
+
+        public static void RemoveSearches(Guid userId)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                dc.UsersSearches.RemoveRange(dc.UsersSearches.Where(x => x.UserId == userId));
+            }
+        }
+
+        public static void AddSearch(UsersSearches search)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                dc.UsersSearches.Add(search);
+                dc.SaveChanges();
+            }
+        }
+
+
+
+
+        public static SellFilter ConvertUserSearch(SellFilter filter, UsersSearches search)
+        {
+            filter.Search = search.Search;
+            filter.StartDate = search.StartDate;
+            filter.EndDate = search.EndDate;
+            filter.OnlyInName = (bool)search.OnlyInName == null ? false : (bool)search.OnlyInName == true;
+            filter.StartPrice = search.StartPrice;
+            filter.EndPrice = search.EndPrice;
+            filter.City = search.City;
+            filter.SortBy = search.SortBy;
+
+            return filter;
+        }
+
+
+
+        #endregion
+
+        #region exchange items/products/adverts
+
+        public static void SetExchangeProductRequest(ExchangeItemRequests request, ExchangeProducts product)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                var exchangeProduct = dc.ExchangeProducts.First(x=>x.Id == product.Id);
+                exchangeProduct.SelectedRequestId = request.Id;
+                dc.SaveChanges();
+            }
+        }
+
+        public static List<spGetExchangeProducts_Result> GetExchangeItems(string search)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                return dc.spGetExchangeProducts(search).ToList();
+            }
+        }
+
+        public static ExchangeProducts GetExchangeItem(long id)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                return dc.ExchangeProducts.FirstOrDefault(x => x.Id == id);
+            }
+        }
+
+        public static void AddExchangeItem(ExchangeProducts exchangeItem, Guid userId, bool inTests = true)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                var advert = AdvertsDataHelper.GetAdvert(exchangeItem.AdvertId);
+
+                if (advert.CreatedUserId == userId || inTests)
+                {
+                    dc.ExchangeProducts.Add(exchangeItem);
+                    dc.SaveChanges();
+                }
+            }
+        }
+
+
+        #endregion
+
+
+        #region exchangeItemRequests
+
+
+        public static void AddExchangeItemRequest(ExchangeItemRequests request)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                dc.ExchangeItemRequests.Add(request);
+                dc.SaveChanges();
+            }
+        }
+
+        public static List<ExchangeItemRequests> GetExchangeItemRequests(long id)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                return dc.ExchangeItemRequests.Where(x => x.WantedExchangeItemId == id).ToList();
+            }
+        }
+
+
+        public static ExchangeItemRequests GetExchangeItemRequest(long id)
+        {
+            using (var dc = new RentooloEntities())
+            {
+                return dc.ExchangeItemRequests.First(x => x.Id == id);
+            }
+        }
+
+
+
+        #endregion
+
     }
 }

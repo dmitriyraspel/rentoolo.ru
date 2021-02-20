@@ -16,11 +16,12 @@ namespace Rentoolo.Model
     {
         public int Id { get; set; }
         public string Message { get; set; }
-        public int СomplaintType { get; set; }
+        public int ComplaintType { get; set; }
         public int ObjectId { get; set; }
         public int ObjectType { get; set; }
         public System.Guid UserSender { get; set; }
         public System.Guid UserRecipier { get; set; }
         public System.DateTime Data { get; set; }
+        public Nullable<byte> Status { get; set; }
     }
 }

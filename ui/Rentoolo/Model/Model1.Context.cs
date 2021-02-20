@@ -36,11 +36,14 @@ namespace Rentoolo.Model
         public virtual DbSet<CashIns> CashIns { get; set; }
         public virtual DbSet<CashOuts> CashOuts { get; set; }
         public virtual DbSet<ChatActiveUsers> ChatActiveUsers { get; set; }
+        public virtual DbSet<ChatInviteTokens> ChatInviteTokens { get; set; }
         public virtual DbSet<ChatMessages> ChatMessages { get; set; }
         public virtual DbSet<Chats> Chats { get; set; }
         public virtual DbSet<ChatUsers> ChatUsers { get; set; }
         public virtual DbSet<Comments> Comments { get; set; }
         public virtual DbSet<Complaints> Complaints { get; set; }
+        public virtual DbSet<CraftsMan> CraftsMan { get; set; }
+        public virtual DbSet<CraftsManOrder> CraftsManOrder { get; set; }
         public virtual DbSet<Currencies> Currencies { get; set; }
         public virtual DbSet<DailyStatistics> DailyStatistics { get; set; }
         public virtual DbSet<DeletedAdverts> DeletedAdverts { get; set; }
@@ -48,7 +51,10 @@ namespace Rentoolo.Model
         public virtual DbSet<DialogMessages> DialogMessages { get; set; }
         public virtual DbSet<DialogsInfo> DialogsInfo { get; set; }
         public virtual DbSet<DisLikes> DisLikes { get; set; }
+        public virtual DbSet<DpdCities> DpdCities { get; set; }
         public virtual DbSet<Exceptions> Exceptions { get; set; }
+        public virtual DbSet<ExchangeItemRequests> ExchangeItemRequests { get; set; }
+        public virtual DbSet<ExchangeProducts> ExchangeProducts { get; set; }
         public virtual DbSet<Favorites> Favorites { get; set; }
         public virtual DbSet<FavoritesByCookies> FavoritesByCookies { get; set; }
         public virtual DbSet<ItemDislikes> ItemDislikes { get; set; }
@@ -58,15 +64,30 @@ namespace Rentoolo.Model
         public virtual DbSet<LoginStat> LoginStat { get; set; }
         public virtual DbSet<LoginStatistics> LoginStatistics { get; set; }
         public virtual DbSet<Memberships> Memberships { get; set; }
+        public virtual DbSet<NewAezakmi> NewAezakmi { get; set; }
         public virtual DbSet<News> News { get; set; }
+        public virtual DbSet<News_towardsbackwards> News_towardsbackwards { get; set; }
+        public virtual DbSet<NewsAlexPigalyov> NewsAlexPigalyov { get; set; }
+        public virtual DbSet<NewsAntares> NewsAntares { get; set; }
+        public virtual DbSet<NewsAzizjan> NewsAzizjan { get; set; }
+        public virtual DbSet<NewsBatrebleSs> NewsBatrebleSs { get; set; }
         public virtual DbSet<NewsEducation> NewsEducation { get; set; }
+        public virtual DbSet<NewsEducationBlacklake> NewsEducationBlacklake { get; set; }
+        public virtual DbSet<NewsEoll73> NewsEoll73 { get; set; }
+        public virtual DbSet<NewsGGdotNET> NewsGGdotNET { get; set; }
+        public virtual DbSet<Newsillfyar> Newsillfyar { get; set; }
+        public virtual DbSet<NewsIlya> NewsIlya { get; set; }
+        public virtual DbSet<NewsMrshkVV> NewsMrshkVV { get; set; }
         public virtual DbSet<NewsRaspel> NewsRaspel { get; set; }
         public virtual DbSet<NewsVark> NewsVark { get; set; }
+        public virtual DbSet<NewsVlad> NewsVlad { get; set; }
         public virtual DbSet<Operations> Operations { get; set; }
         public virtual DbSet<Payments> Payments { get; set; }
         public virtual DbSet<Phones> Phones { get; set; }
+        public virtual DbSet<Rates> Rates { get; set; }
         public virtual DbSet<Recipes> Recipes { get; set; }
         public virtual DbSet<Referrals> Referrals { get; set; }
+        public virtual DbSet<Rent> Rent { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<Settings> Settings { get; set; }
         public virtual DbSet<TenderRequest> TenderRequest { get; set; }
@@ -78,11 +99,15 @@ namespace Rentoolo.Model
         public virtual DbSet<UserSettings> UserSettings { get; set; }
         public virtual DbSet<UsersOpenAuthAccounts> UsersOpenAuthAccounts { get; set; }
         public virtual DbSet<UsersOpenAuthData> UsersOpenAuthData { get; set; }
+        public virtual DbSet<UsersSearches> UsersSearches { get; set; }
         public virtual DbSet<UserViews> UserViews { get; set; }
+        public virtual DbSet<ViewedObjects> ViewedObjects { get; set; }
         public virtual DbSet<Wallets> Wallets { get; set; }
         public virtual DbSet<Watched> Watched { get; set; }
         public virtual DbSet<WatchedByCookies> WatchedByCookies { get; set; }
         public virtual DbSet<Categories> Categories { get; set; }
+        public virtual DbSet<NewsShCodder> NewsShCodder { get; set; }
+        public virtual DbSet<RentedTime> RentedTime { get; set; }
     
         [DbFunction("RentooloEntities", "fnGetAllUsers")]
         public virtual IQueryable<fnGetAllUsers_Result> fnGetAllUsers()
@@ -227,6 +252,15 @@ namespace Rentoolo.Model
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spAddWatchedByCookies", uidParameter, advertIdParameter);
         }
     
+        public virtual ObjectResult<spDPDCitiesTop10_Result> spDPDCitiesTop10(string text)
+        {
+            var textParameter = text != null ?
+                new ObjectParameter("text", text) :
+                new ObjectParameter("text", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spDPDCitiesTop10_Result>("spDPDCitiesTop10", textParameter);
+        }
+    
         public virtual ObjectResult<spGetChats_Result> spGetChats(Nullable<System.Guid> userId)
         {
             var userIdParameter = userId.HasValue ?
@@ -287,6 +321,24 @@ namespace Rentoolo.Model
                 new ObjectParameter("userId", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetComplaintsBySender_Result>("spGetComplaintsBySender", userIdParameter);
+        }
+    
+        public virtual ObjectResult<spGetExchangeItemRequests_Result> spGetExchangeItemRequests(Nullable<long> exchangeItemId)
+        {
+            var exchangeItemIdParameter = exchangeItemId.HasValue ?
+                new ObjectParameter("exchangeItemId", exchangeItemId) :
+                new ObjectParameter("exchangeItemId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetExchangeItemRequests_Result>("spGetExchangeItemRequests", exchangeItemIdParameter);
+        }
+    
+        public virtual ObjectResult<spGetExchangeProducts_Result> spGetExchangeProducts(string query)
+        {
+            var queryParameter = query != null ?
+                new ObjectParameter("query", query) :
+                new ObjectParameter("query", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetExchangeProducts_Result>("spGetExchangeProducts", queryParameter);
         }
     
         public virtual ObjectResult<spGetFavorites_Result> spGetFavorites(Nullable<System.Guid> userId)
@@ -352,19 +404,6 @@ namespace Rentoolo.Model
                 new ObjectParameter("uid", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetWatchedByCookies_Result>("spGetWatchedByCookies", uidParameter);
-        }
-    
-        public virtual int spUpdateQiwiAccountBalance(string number, Nullable<double> balance)
-        {
-            var numberParameter = number != null ?
-                new ObjectParameter("number", number) :
-                new ObjectParameter("number", typeof(string));
-    
-            var balanceParameter = balance.HasValue ?
-                new ObjectParameter("balance", balance) :
-                new ObjectParameter("balance", typeof(double));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spUpdateQiwiAccountBalance", numberParameter, balanceParameter);
         }
     }
 }

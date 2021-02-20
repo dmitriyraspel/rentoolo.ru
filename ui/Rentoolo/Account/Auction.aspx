@@ -11,11 +11,20 @@
             $("div#mdropzone").dropzone({
                 url: "/api/upi",
                 addRemoveLinks: true,
+                acceptedFiles: ".jpeg,.jpg,.png,.gif",
                 resizeWidth: 800,
                 resizeHeight: 600,
                 resizeMethod: 'contain',
                 resizeQuality: 1.0,
                 dictDefaultMessage: "Add photos",
+                init: function () {
+                    this.on("thumbnail", function (file) {
+                        if (file.width < 100 || file.height < 100) {
+                            alert("Minimum Image resolution 100x100px")
+                            this.removeFile(file);
+                        }
+                    });
+                },
                 success: function (file, response) {
                     var filaName = response;
                     file.previewElement.classList.add("dz-success");
@@ -30,36 +39,49 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:Label ID="LabelName" runat="server" Text="Название аукциона:"></asp:Label>
+    <div>
 
-    <br />
-    <asp:TextBox ID="TextBoxName" ClientIDMode="Static" runat="server" Width="400px"></asp:TextBox>
-    <br />
+        <%--<asp:Label ID="LabelName" runat="server" Text="Название аукциона:"></asp:Label>
 
-    <asp:Image ID="Image1" runat="server" Width="404px" />
-    <br />
-    <asp:Label ID="LabelDescription"  runat="server" Text="Описание:"></asp:Label>
-    <br />
-    <asp:TextBox ID="TextBoxDescription" ClientIDMode="Static" runat="server" Rows="4" TextMode="MultiLine" Width="400px"></asp:TextBox>
-    <br />
-    <br />
-     <asp:Label ID="LabelPrice" runat="server" Text="Начальная цена:"></asp:Label>
-    <asp:TextBox ID="TextBoxPrice" runat="server" Width="81px"></asp:TextBox>
+        <br />
+        <asp:TextBox ID="TextBoxName" ClientIDMode="Static" runat="server" Width="400px"></asp:TextBox>
+        <br />
 
-    <br />
-    DataEndLife: <br />
-    <asp:TextBox ID="TextBoxDataEnd" runat="server"></asp:TextBox>
+        <asp:Image ID="Image1" runat="server" Width="404px" />
+        <br />
+        <asp:Label ID="LabelDescription"  runat="server" Text="Описание:"></asp:Label>
+        <br />
+        <asp:TextBox ID="TextBoxDescription" ClientIDMode="Static" runat="server" Rows="4" TextMode="MultiLine" Width="400px"></asp:TextBox>
+        <br />
+        <br />
+         <asp:Label ID="LabelPrice" runat="server" Text="Начальная цена:"></asp:Label>
+        <asp:TextBox ID="TextBoxPrice" runat="server" Width="81px"></asp:TextBox>
+
+        <br />
+        DataEndLife: <br />
+        <asp:TextBox ID="TextBoxDataEnd" runat="server"></asp:TextBox>--%>
+
+        <div>
+            <input type="text" name="auctionName" placeholder="name" value="<%=CurrentAuction.Name %>" />
+            <input type="text" name="description" placeholder="description" value="<%=CurrentAuction.Description %>" />
+            <input type="number" name="startPrice" placeholder="start price" value="<%=CurrentAuction.StartPrice %>" />
+            <input type="date" name="dateEnd" value="<%=CurrentAuction.DataEnd %>" />
 
 
-    <div>         
-        <span class="additem-title">Фотографии</span>
-        <div class="image-load">
-          <div id="mdropzone" class="dropzone"></div>
-          <div id="my-dropzone" style="display: none;"></div> 
+
         </div>
-     </div>
-    <br />
-    <br />
 
-    <asp:Button ID="ButtonSave" runat="server" Text="Добавить" OnClick="ButtonSave_Click" />
+
+        <div>         
+            <span class="additem-title">Фотографии</span>
+            <div class="image-load">
+              <div id="mdropzone" class="dropzone"></div>
+              <div id="my-dropzone" style="display: none;"></div> 
+            </div>
+         </div>
+        <br />
+        <br />
+
+        <asp:Button ID="ButtonSave" runat="server" Text="Добавить" OnClick="ButtonSave_Click" />
+    </div>
 </asp:Content>

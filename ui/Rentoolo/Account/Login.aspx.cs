@@ -5,26 +5,28 @@ using System.Net;
 using System.Collections.Specialized;
 using System.IO;
 using System.Web.Script.Serialization;
+using System.Web.Security;
+using Rentoolo.Model;
+using System.Text.RegularExpressions;
 
 namespace Rentoolo.Account
 {
-    public partial class Login : Page
+    public partial class Login : BasicPage
     {
-        //public bool IsLocalhost { get; set;}
-
+        public bool IsLocalhost { get; set; }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //string host = HttpContext.Current.Request.Url.Host;
+            string host = HttpContext.Current.Request.Url.Host;
 
-            //if (host == "localhost2")
-            //{
-            //    IsLocalhost = true;
-            //}
-            //else
-            //{
-            //    IsLocalhost = false;
-            //}
+            if (host == "localhost")
+            {
+                IsLocalhost = true;
+            }
+            else
+            {
+                IsLocalhost = false;
+            }
 
             //RegisterHyperLink.NavigateUrl = "~/Account/Cabinet.aspx";
 
@@ -75,12 +77,11 @@ namespace Rentoolo.Account
 
         protected void On_LoggingIn(object sender, System.Web.UI.WebControls.LoginCancelEventArgs e)
         {
-            //if (IsLocalhost)
-            //{
-            //    e.Cancel = false;
-            //    return;
-            //}
-
+            if (IsLocalhost)
+            {
+                e.Cancel = false;
+                return;
+            }
 
             if (!Validate())
             {
@@ -88,7 +89,7 @@ namespace Rentoolo.Account
             }
         }
 
-        protected void Unnamed1_LoggedIn(object sender, EventArgs e)
+        protected void Redirect()
         {
             var returnUrl = HttpUtility.UrlEncode(Request.QueryString["ReturnUrl"]);
 
@@ -101,6 +102,54 @@ namespace Rentoolo.Account
                 Response.Redirect(string.Format("~/{0}", returnUrl.Replace("%2f", "/")));
             }
 
+        }
+
+        protected void Authenticate(object sender, System.Web.UI.WebControls.AuthenticateEventArgs e)
+        {
+            string login;
+            if (IsValidEmail(Login1.UserName))
+            {
+                var membershipUser = DataHelper.GetUserMembershipByEmail(Login1.UserName);
+                if (membershipUser == null)
+                {
+                    e.Authenticated = false;
+                    return;
+                }
+                login = DataHelper.GetUser(membershipUser.UserId).UserName;
+                if (string.IsNullOrEmpty(login))
+                {
+                    e.Authenticated = false;
+                    return;
+                }
+            }
+            else
+            {
+                login = Login1.UserName;
+            }
+
+            if (Membership.ValidateUser(login, Login1.Password))
+            {
+
+                e.Authenticated = true;
+                FormsAuthentication.SetAuthCookie(login, createPersistentCookie: false);
+                Redirect();
+            }
+            else
+            {
+                e.Authenticated = false;
+            }
+        }
+        bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

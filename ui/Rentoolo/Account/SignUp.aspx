@@ -68,6 +68,7 @@
                                 </div>
                                 <div class="text-danger">
                                         <asp:RequiredFieldValidator ID="RequiredFieldValidatorUserName" runat="server" ControlToValidate="UserName" CssClass="field-validation-error" Display="Dynamic" ErrorMessage="Введите имя пользователя" />
+                                         <asp:CustomValidator ID="Customvalidator1" runat="server" ControlToValidate="UserName" CssClass="field-validation-error" Display="Dynamic" OnServerValidate="Customvalidator1_ServerValidate" ErrorMessage="Такое имя занято :(" />
                                 </div>
 
                                 <div class="form-group">
@@ -76,6 +77,7 @@
                                 <div class="text-danger">
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="Email" CssClass="field-validation-error" Display="Dynamic" ErrorMessage="Введите email" />
                                     <asp:RegularExpressionValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="Email" CssClass="field-validation-error" Display="Dynamic" ErrorMessage="Введите корректный email" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"/>
+                                    <asp:CustomValidator ID="Customvalidator2" runat="server" ControlToValidate="Email" CssClass="field-validation-error" Display="Dynamic" OnServerValidate="Customvalidator2_ServerValidate" ErrorMessage="Упс, такой email уже занят ✖" />
                                  </div>
 
                                 <div class="form-group">
@@ -97,7 +99,7 @@
                                     <div class="g-recaptcha" data-sitekey="6Lf4W6QUAAAAAPK2AR7Ms8SsI9_KuJ0l8XZWaTWD"></div>
                                 </div>
 
-                                <div class="mb-5">
+                                <div class="mb-5" style="margin-top: 70px">
                                     <asp:Button ID="Button1" runat="server" CssClass="btn btn-primary" CommandName="MoveNext" Text="Зарегистрироваться" />
                                 </div>
 

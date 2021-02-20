@@ -12,8 +12,8 @@ namespace Rentoolo.Account
     {
         // не менять имя, при изменении имени на User будет конфликт имен при наследовании
         public Users CurUser;
-        public List<Chats> ChatList;
-        
+        public List<Chats> ChatList = new List<Chats>();
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -62,27 +62,48 @@ namespace Rentoolo.Account
             }
 
 
-            
-            ChatList = DataHelper.GetChats(CurUser.UserId);
+            if (CurUser.UserId != User.UserId)
+            {
+                ChatList = DataHelper.GetChats(User.UserId);
+            }
 
-            RptrComments.DataSource = ChatList;
-            RptrComments.DataBind();
-            
 
+            //RptrComments.DataSource = ChatList;
+            //RptrComments.DataBind();
 
             if (!IsPostBack)
             {
-                
-                
+
+
             }
         }
 
-        // join to chat
+        // Redirect to chat if it exists
+        // if not, create it and redirect
         protected void Button1_Click(object sender, EventArgs e)
         {
-            DataHelper.CreateChatDialog(new Chats() {
-                OwnerId = User.UserId, ChatType = 1, ChatName = CurUser.UserName
-            }, CurUser.UserId);
+            //DataHelper.CreateChatDialog(new Chats() {
+            //    OwnerId = User.UserId,
+            //    ChatType = 1,
+            //    ChatName = CurUser.UserName
+            //}, CurUser.UserId);
+
+            bool dialogExists = DataHelper.CheckDialogExistance(User.UserId, CurUser.UserId);
+
+            long chatId;
+
+            if (dialogExists)
+            {
+                chatId = (long)DataHelper.GetDialogId(User.UserId, CurUser.UserId);
+
+            }
+            else
+            {
+                chatId = DataHelper.CreateChatDialog(User.UserId, CurUser.UserId);
+            }
+
+
+            Response.Redirect("/ChatFront/ChatFront4.aspx?chatId=" + chatId.ToString());
         }
 
         protected void ChatList_Selecting(object sender, ObjectDataSourceSelectingEventArgs e)
@@ -102,7 +123,7 @@ namespace Rentoolo.Account
             string cmdArg = e.CommandArgument.ToString();
 
 
-            
+
         }
 
         protected void Button2_Click(object sender, EventArgs e)
@@ -123,8 +144,9 @@ namespace Rentoolo.Account
 
         protected void Button2_Click1(object sender, EventArgs e)
         {
-
-            Chats chat = ChatList.FirstOrDefault(x => x.ChatName == TextBox1.Text);
+            string chatName = Request.Form["chatName"];
+            //Chats chat = ChatList.FirstOrDefault(x => x.ChatName == TextBox1.Text);
+            Chats chat = ChatList.FirstOrDefault(x => x.ChatName == chatName);
             DataHelper.AddChatUser(new ChatUsers() { ChatId = chat.Id, UserId = CurUser.UserId });
         }
 
@@ -135,7 +157,7 @@ namespace Rentoolo.Account
                 string name = TextBox2.Text;
                 DataHelper.SetUserUniqueId(CurUser.UserId, name);
             }
-            
+
         }
     }
 }
